@@ -3,6 +3,8 @@ import { fetchSheetData } from '../lib/sheetsService';
 import type { CruzamentoData } from '../lib/sheetsService';
 import { MetricCard } from './MetricCard';
 import { parseDate } from '../lib/dateUtils';
+import { MetricasMetaAds } from './MetricasMetaAds';
+import { fetchWindsorData, type WindsorMetrics } from '../lib/windsorService';
 
 export const Dashboard: React.FC = () => {
   const [data, setData] = useState<CruzamentoData[]>([]);
@@ -10,9 +12,30 @@ export const Dashboard: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  // Estado do Windsor
+  const [windsorData, setWindsorData] = useState<WindsorMetrics[]>([]);
+  const [loadingWindsor, setLoadingWindsor] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
+
+  // Carregar dados Windsor quando datas mudam
+  useEffect(() => {
+    if (!startDate || !endDate) {
+      setWindsorData([]);
+      return;
+    }
+
+    const loadWindsor = async () => {
+      setLoadingWindsor(true);
+      const data = await fetchWindsorData(startDate, endDate);
+      setWindsorData(data);
+      setLoadingWindsor(false);
+    };
+
+    loadWindsor();
+  }, [startDate, endDate]);
 
   const loadData = async () => {
     setLoading(true);
@@ -185,6 +208,9 @@ export const Dashboard: React.FC = () => {
               </table>
             </div>
           </section>
+
+          {/* Seção Meta Ads */}
+          <MetricasMetaAds data={windsorData} loading={loadingWindsor} />
         </>
       )}
     </main>
