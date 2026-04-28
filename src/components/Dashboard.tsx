@@ -25,11 +25,9 @@ export const Dashboard: React.FC = () => {
     if (!startDate || !endDate) return data;
 
     return data.filter(item => {
-      // Usar dataConversao se disponível, senão usar dataEntrada
-      const dateToFilter = item.dataConversao || item.dataEntrada;
-      if (!dateToFilter) return false;
+      if (!item.dataConversao) return false;
 
-      const itemDate = parseDate(dateToFilter);
+      const itemDate = parseDate(item.dataConversao);
       const start = new Date(startDate);
       const end = new Date(endDate);
 
