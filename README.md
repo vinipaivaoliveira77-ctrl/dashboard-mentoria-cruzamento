@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# Dashboard Mentoria - Cruzamento de Dados
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dashboard interativo para análise de dados de cruzamento de leads e vendas da mentoria.
 
-Currently, two official plugins are available:
+## Visão Geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Este dashboard analisa dados do Google Sheets (aba "Cruzamento de Dados - Mentoria"), apresentando métricas de conversão, análise por UTM Medium e UTM Content, com filtros por data.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Métricas Gerais: Total de Vendas, Faturamento, Ticket Médio, Dias até Conversão
+- Análise por UTM Medium com ranking de faturamento
+- Análise por UTM Content com ranking de faturamento
+- Filtros por data (De/Até)
+- Design responsivo com branding Atlas Scale
+- Fallback com dados mock para testes
 
-## Expanding the ESLint configuration
+## Stack Tecnológico
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 18 + TypeScript
+- Vite para build/dev
+- Google Sheets API (backend serverless)
+- Vercel para deployment
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Instalação Local
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Acessa em http://localhost:5173
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Build para Produção
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview
 ```
+
+## Integração Google Sheets
+
+Atualmente o dashboard usa dados mock para demonstração. Para conectar ao Google Sheets:
+
+1. Uma função serverless em `api/sheets.ts` irá buscar dados da aba "Cruzamento de Dados - Mentoria"
+2. O endpoint será disponibilizado em `/api/sheets`
+3. Service account credentials serão configurados como variáveis de ambiente no Vercel
+
+## Estrutura de Dados
+
+Esperada interface `CruzamentoData`:
+- email: string
+- utmMedium: string
+- utmContent: string
+- utmCampaign: string
+- utmTerm: string
+- dataEntrada: string (formato DD/MM/YYYY HH:MM:SS)
+- valorVenda: number
+- dataConversao: string (formato DD/MM/YYYY HH:MM:SS)
+- diasConversao: number
+- observacao: string
+
+## Deployment
+
+O projeto está pronto para deployment em Vercel. Após conectar o repositório:
+
+1. Variáveis de ambiente necessárias:
+   - GOOGLE_SHEETS_ID
+   - GOOGLE_SHEETS_TAB_NAME
+   - GOOGLE_SERVICE_ACCOUNT_*
+
+2. Build command: `npm run build`
+3. Output directory: `dist`
+
+## Notas
+
+Este dashboard funciona independentemente do Dashboard de Cálculo de Metas. Ambos são aplicações separadas com propósitos distintos.
