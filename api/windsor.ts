@@ -61,9 +61,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Processar dados
+    // Processar dados - Filtrar apenas campanhas com "PPTOMentoria"
     const records: WindsorData[] = (data.data || [])
       .filter((row: any) => row.date) // Descartar linhas sem data
+      .filter((row: any) => row.campaign_name?.includes('PPTOMentoria')) // Filtrar por campaign_name
       .map((row: any) => {
         // Extrair métricas do array actions
         let landing_page_views = 0;
