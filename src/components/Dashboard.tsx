@@ -25,9 +25,19 @@ export const Dashboard: React.FC = () => {
     if (!startDate || !endDate) return data;
 
     return data.filter(item => {
-      const itemDate = parseDate(item.dataConversao);
+      // Usar dataConversao se disponível, senão usar dataEntrada
+      const dateToFilter = item.dataConversao || item.dataEntrada;
+      if (!dateToFilter) return false;
+
+      const itemDate = parseDate(dateToFilter);
       const start = new Date(startDate);
       const end = new Date(endDate);
+
+      // Resetar hora para comparação apenas de datas
+      itemDate.setHours(0, 0, 0, 0);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+
       return itemDate >= start && itemDate <= end;
     });
   }, [data, startDate, endDate]);
