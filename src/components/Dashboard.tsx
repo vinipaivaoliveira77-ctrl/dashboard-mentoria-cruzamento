@@ -24,26 +24,15 @@ export const Dashboard: React.FC = () => {
   const filteredData = useMemo(() => {
     if (!startDate || !endDate) return data;
 
-    console.log('Filter dates - Start:', startDate, 'End:', endDate);
-    console.log('Total data items:', data.length);
-
-    const filtered = data.filter(item => {
+    return data.filter(item => {
       if (!item.dataConversao) return false;
 
       const itemDate = parseDate(item.dataConversao);
       const start = new Date(startDate + 'T00:00:00');
       const end = new Date(endDate + 'T23:59:59');
 
-      const match = itemDate >= start && itemDate <= end;
-      if (match) {
-        console.log('Match found:', item.dataConversao, itemDate, start, end);
-      }
-
-      return match;
+      return itemDate >= start && itemDate <= end;
     });
-
-    console.log('Filtered results:', filtered.length);
-    return filtered;
   }, [data, startDate, endDate]);
 
   const metrics = useMemo(() => {

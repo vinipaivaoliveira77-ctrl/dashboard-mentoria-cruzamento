@@ -43,14 +43,6 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       return res.status(200).json([]);
     }
 
-    // Debug: log da primeira linha para ver quantas colunas temos
-    console.log('Headers:', rows[0]);
-    console.log('Total de colunas:', rows[0]?.length);
-    if (rows.length > 1) {
-      console.log('Primeira linha de dados:', rows[1]);
-      console.log('Valor na posição 6:', rows[1]?.[6]);
-    }
-
     // Mapear colunas por índice fixo
     // A=0(EMAIL), B=1(UTM MEDIUM), C=2(UTM CONTENT), D=3(UTM CAMPAIGN),
     // E=4(UTM TERM), F=5(DATA ENTRADA), G=6(VALOR VENDA), H=7(DATA CONVERSAO),
