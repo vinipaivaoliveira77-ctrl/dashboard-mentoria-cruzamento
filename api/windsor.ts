@@ -97,7 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
       });
 
-    // Cache de 1 hora
+    // Cache de 1 hora (1h)
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.status(200).json(records);
   } catch (error) {
