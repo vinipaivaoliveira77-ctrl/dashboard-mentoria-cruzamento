@@ -56,7 +56,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
     // E=4(UTM TERM), F=5(DATA ENTRADA), G=6(VALOR VENDA), H=7(DATA CONVERSAO),
     // I=8(DIAS), J=9(OBSERVACAO)
 
-    const data = rows.slice(1).map((row, rowIdx) => {
+    const data = rows.slice(1).map((row) => {
       const email = row[0]?.trim() || '';
       const utmMedium = row[1]?.trim() || '';
       const utmContent = row[2]?.trim() || '';
@@ -64,11 +64,14 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       const utmTerm = row[4]?.trim() || '';
       const dataEntrada = row[5]?.trim() || '';
 
-      // Converter valor com format brasileiro (1.987,00 → 1987.00)
+      // Converter valor com format brasileiro (R$ 1.987,00 → 1987.00)
       const valorStr = row[6]?.toString().trim() || '0';
-      const valorVenda = parseFloat(
-        valorStr.replace(/\./g, '').replace(',', '.') || '0'
-      ) || 0;
+      const valorLimpo = valorStr
+        .replace(/R\$\s?/g, '') // Remove "R$"
+        .replace(/\./g, '') // Remove separador de milhares
+        .replace(',', '.') // Converte vírgula em ponto
+        .trim();
+      const valorVenda = parseFloat(valorLimpo) || 0;
 
       const dataConversao = row[7]?.trim() || '';
 
