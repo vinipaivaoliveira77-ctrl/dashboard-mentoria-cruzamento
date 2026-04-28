@@ -4,7 +4,7 @@ import { google } from 'googleapis';
 const SPREADSHEET_ID = '1g-M-7UqI4DufsoXfkyjOkQiSXQOSW2p0A-IfeStKNTs';
 const SHEET_NAME = 'Cruzamento de Dados - Mentoria';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(_req: VercelRequest, res: VercelResponse) {
   try {
     // Validar variáveis de ambiente
     if (
@@ -26,11 +26,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         private_key: process.env.GOOGLE_PRIVATE_KEY,
         client_email: process.env.GOOGLE_CLIENT_EMAIL,
         client_id: process.env.GOOGLE_CLIENT_ID || '',
-        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-        token_uri: 'https://oauth2.googleapis.com/token',
-        auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
         client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL || '',
-      },
+      } as any,
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
 
@@ -46,33 +43,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json([]);
     }
 
-    const headers = rows[0].map((h) => h?.trim().toLowerCase() || '');
-
-    // Encontrar índices das colunas
-    const findIndex = (keywords: string[]) => {
-      return headers.findIndex((h) =>
-        keywords.some((k) => h.includes(k.toLowerCase()))
-      );
-    };
-
-    const emailIdx = findIndex(['email']);
-    const dataEntradaIdx = findIndex(['data', 'entrada']);
-    const dataConversaoIdx = findIndex(['conversao']);
-    const valorVendaIdx = findIndex(['valor', 'venda']);
-    const utmMediumIdx = findIndex(['utm_medium', 'utmmedium', 'medium']);
-    const utmContentIdx = findIndex(['utm_content', 'utmcontent', 'content']);
-    const utmCampaignIdx = findIndex(['utm_campaign', 'utmcampaign', 'campaign']);
-    const utmTermIdx = findIndex(['utm_term', 'utmterm', 'term']);
+    // Mapear colunas por índice fixo
+    // A=0(EMAIL), B=1(UTM MEDIUM), C=2(UTM CONTENT), D=3(UTM CAMPAIGN),
+    // E=4(UTM TERM), F=5(DATA ENTRADA), G=6(VALOR VENDA), H=7(DATA CONVERSAO),
+    // I=8(DIAS), J=9(OBSERVACAO)
 
     const data = rows.slice(1).map((row) => {
-      const email = row[emailIdx] || '';
-      const dataEntrada = row[dataEntradaIdx] || '';
-      const dataConversao = row[dataConversaoIdx] || '';
-      const valorVenda = parseFloat(row[valorVendaIdx]) || 0;
-      const utmMedium = row[utmMediumIdx] || '';
-      const utmContent = row[utmContentIdx] || '';
-      const utmCampaign = row[utmCampaignIdx] || '';
-      const utmTerm = row[utmTermIdx] || '';
+      const email = row[0]?.trim() || '';
+      const utmMedium = row[1]?.trim() || '';
+      const utmContent = row[2]?.trim() || '';
+      const utmCampaign = row[3]?.trim() || '';
+      const utmTerm = row[4]?.trim() || '';
+      const dataEntrada = row[5]?.trim() || '';
+      const valorVenda = parseFloat(row[6]?.toString().replace(',', '.') || '0') || 0;
+      const dataConversao = row[7]?.trim() || '';
+      const observacao = row[9]?.trim() || '';
 
       let diasConversao = 0;
       if (dataEntrada && dataConversao) {
