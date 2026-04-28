@@ -55,9 +55,14 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       const utmCampaign = row[3]?.trim() || '';
       const utmTerm = row[4]?.trim() || '';
       const dataEntrada = row[5]?.trim() || '';
-      const valorVenda = parseFloat(row[6]?.toString().replace(',', '.') || '0') || 0;
+
+      // Converter valor com format brasileiro (1.987,00 → 1987.00)
+      const valorStr = row[6]?.toString().trim() || '0';
+      const valorVenda = parseFloat(
+        valorStr.replace(/\./g, '').replace(',', '.') || '0'
+      ) || 0;
+
       const dataConversao = row[7]?.trim() || '';
-      const observacao = row[9]?.trim() || '';
 
       let diasConversao = 0;
       if (dataEntrada && dataConversao) {
@@ -98,16 +103,24 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 }
 
 function parseDate(dateString: string): Date {
+  if (!dateString || dateString.trim() === '') {
+    return new Date(0);
+  }
+
   const parts = dateString.trim().split(' ');
   const dateParts = parts[0].split('/');
-  const timeParts = parts[1]?.split(':') || [0, 0, 0];
 
-  return new Date(
-    parseInt(dateParts[2]),
-    parseInt(dateParts[1]) - 1,
-    parseInt(dateParts[0]),
-    parseInt(timeParts[0]),
-    parseInt(timeParts[1]),
-    parseInt(timeParts[2])
-  );
+  if (dateParts.length < 3) {
+    return new Date(0);
+  }
+
+  const timeParts = parts[1]?.split(':') || [0, 0, 0];
+  const day = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1;
+  const year = parseInt(dateParts[2], 10);
+  const hour = parseInt(timeParts[0], 10) || 0;
+  const minute = parseInt(timeParts[1], 10) || 0;
+  const second = parseInt(timeParts[2], 10) || 0;
+
+  return new Date(year, month, day, hour, minute, second);
 }
