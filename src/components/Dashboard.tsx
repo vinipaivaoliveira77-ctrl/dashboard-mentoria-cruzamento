@@ -153,12 +153,6 @@ export const Dashboard: React.FC = () => {
                 icon="📈"
                 color="orange"
               />
-              <MetricCard
-                label="Dias até Conversão"
-                value={Math.round(metrics.diasMediosConversao)}
-                icon="⏱️"
-                color="purple"
-              />
               {windsorData.length > 0 && (
                 <MetricCard
                   label="ROAS"

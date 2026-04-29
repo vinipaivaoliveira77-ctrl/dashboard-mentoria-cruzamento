@@ -229,6 +229,26 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
+/* Funil de tráfego */
+.funnel-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.funnel-item {
+  flex: 1;
+}
+
+.funnel-arrow {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
 @media (max-width: 768px) {
   .dashboard {
     padding: 8px;
@@ -248,5 +268,14 @@ tbody tr:last-child td {
 
   .filter-group input {
     min-width: 100%;
+  }
+
+  .funnel-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .funnel-arrow {
+    transform: rotate(90deg);
   }
 }

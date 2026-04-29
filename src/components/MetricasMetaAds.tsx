@@ -29,7 +29,6 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
 
   // Calculos agregados
   const totalImpressions = data.reduce((sum, item) => sum + item.impressions, 0);
-  const totalClicks = data.reduce((sum, item) => sum + item.clicks, 0);
   const totalLinkClicks = data.reduce((sum, item) => sum + item.link_clicks, 0);
   const totalLandingPageViews = data.reduce(
     (sum, item) => sum + item.landing_page_views,
@@ -50,18 +49,46 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
     <section className="metricas-meta">
       <h2>Meta Ads - Dados do Periodo</h2>
 
+      {/* Funil: Gasto → Leads → CPL */}
+      <div className="funnel-container">
+        <div className="funnel-item">
+          <MetricCard
+            label="Gasto Total"
+            value={`R$ ${totalSpend.toLocaleString('pt-BR', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
+            icon="💳"
+            color="orange"
+          />
+        </div>
+        <div className="funnel-arrow">→</div>
+        <div className="funnel-item">
+          <MetricCard
+            label="Leads"
+            value={totalLeads.toLocaleString('pt-BR')}
+            icon="🎯"
+            color="purple"
+          />
+        </div>
+        <div className="funnel-arrow">→</div>
+        <div className="funnel-item">
+          <MetricCard
+            label="CPL"
+            value={`R$ ${cpl.toFixed(2)}`}
+            icon="🎁"
+            color="green"
+          />
+        </div>
+      </div>
+
+      {/* Métricas de tráfego */}
       <div className="metrics-grid">
         <MetricCard
           label="Impressoes"
           value={totalImpressions.toLocaleString('pt-BR')}
           icon="👁"
           color="blue"
-        />
-        <MetricCard
-          label="Cliques"
-          value={totalClicks.toLocaleString('pt-BR')}
-          icon="→"
-          color="orange"
         />
         <MetricCard
           label="Link Clicks"
@@ -74,21 +101,6 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           value={totalLandingPageViews.toLocaleString('pt-BR')}
           icon="📄"
           color="green"
-        />
-        <MetricCard
-          label="Leads"
-          value={totalLeads.toLocaleString('pt-BR')}
-          icon="🎯"
-          color="purple"
-        />
-        <MetricCard
-          label="Gasto Total"
-          value={`R$ ${totalSpend.toLocaleString('pt-BR', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
-          icon="💳"
-          color="orange"
         />
         <MetricCard
           label="CPM Medio"
@@ -119,12 +131,6 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           value={`${pageConversionRate.toFixed(2)}%`}
           icon="✓"
           color="green"
-        />
-        <MetricCard
-          label="CPL"
-          value={`R$ ${cpl.toFixed(2)}`}
-          icon="🎁"
-          color="purple"
         />
       </div>
 
