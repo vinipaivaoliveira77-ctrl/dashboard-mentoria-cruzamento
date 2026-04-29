@@ -18,7 +18,6 @@ import {
   CTRIcon,
   ConnectRateIcon,
   ConversionIcon,
-  CPLIcon,
 } from './icons/TrafficIcons';
 
 interface MetricasMetaAdsProps {

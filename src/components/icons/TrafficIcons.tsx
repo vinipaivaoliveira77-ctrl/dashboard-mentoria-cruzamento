@@ -1,14 +1,14 @@
-import React from 'react';
+import type { SVGProps } from 'react';
 
-const iconProps = {
+const iconProps: SVGProps<SVGSVGElement> = {
   width: '28',
   height: '28',
   viewBox: '0 0 24 24',
   fill: 'none',
   stroke: 'currentColor',
   strokeWidth: '1.5',
-  strokeLinecap: 'round',
-  strokeLinejoin: 'round',
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
 };
 
 export const ImpressionIcon = () => (
