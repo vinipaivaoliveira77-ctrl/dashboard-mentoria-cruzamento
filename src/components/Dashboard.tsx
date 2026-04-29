@@ -168,7 +168,7 @@ export const Dashboard: React.FC = () => {
 
           <section className="metrics-section">
             <h2>Vendas por UTM Medium</h2>
-            <div className="table-responsive">
+            <div className="table-responsive table-scrollable">
               <table>
                 <thead>
                   <tr>
@@ -194,7 +194,7 @@ export const Dashboard: React.FC = () => {
 
           <section className="metrics-section">
             <h2>Vendas por UTM Content</h2>
-            <div className="table-responsive">
+            <div className="table-responsive table-scrollable">
               <table>
                 <thead>
                   <tr>
