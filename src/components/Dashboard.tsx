@@ -66,6 +66,9 @@ export const Dashboard: React.FC = () => {
       ? filteredData.reduce((sum, item) => sum + item.diasConversao, 0) / totalVendas
       : 0;
 
+    const totalSpend = windsorData.reduce((sum, item) => sum + item.spend, 0);
+    const roas = totalSpend > 0 ? totalFaturamento / totalSpend : 0;
+
     const porUtmMedium = filteredData.reduce((acc, item) => {
       if (!acc[item.utmMedium]) {
         acc[item.utmMedium] = { vendas: 0, faturamento: 0 };
@@ -89,10 +92,12 @@ export const Dashboard: React.FC = () => {
       totalFaturamento,
       ticketMedio,
       diasMediosConversao,
+      totalSpend,
+      roas,
       porUtmMedium: Object.entries(porUtmMedium).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
       porUtmContent: Object.entries(porUtmContent).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
     };
-  }, [filteredData]);
+  }, [filteredData, windsorData]);
 
   return (
     <main className="dashboard">
@@ -128,7 +133,7 @@ export const Dashboard: React.FC = () => {
       ) : (
         <>
           <section className="metrics-section">
-            <h2>Métricas Gerais</h2>
+            <h2>Visão Geral da Operação</h2>
             <div className="metrics-grid">
               <MetricCard
                 label="Total de Vendas"
@@ -154,8 +159,18 @@ export const Dashboard: React.FC = () => {
                 icon="⏱️"
                 color="purple"
               />
+              {windsorData.length > 0 && (
+                <MetricCard
+                  label="ROAS"
+                  value={`${metrics.roas.toFixed(2)}x`}
+                  icon="📊"
+                  color="purple"
+                />
+              )}
             </div>
           </section>
+
+          <MetricasMetaAds data={windsorData} loading={loadingWindsor} />
 
           <section className="metrics-section">
             <h2>Vendas por UTM Medium</h2>
@@ -208,9 +223,6 @@ export const Dashboard: React.FC = () => {
               </table>
             </div>
           </section>
-
-          {/* Seção Meta Ads */}
-          <MetricasMetaAds data={windsorData} loading={loadingWindsor} />
         </>
       )}
     </main>
