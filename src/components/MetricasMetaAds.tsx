@@ -207,6 +207,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
               <th>Anuncio</th>
               <th>Leads</th>
               <th>Gasto</th>
+              <th>CPL</th>
               <th>CTR</th>
               <th>Taxa Conversao</th>
             </tr>
@@ -218,12 +219,14 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
                 ad.leads,
                 ad.landing_page_views
               );
+              const adCpl = calculateCPL(ad.spend, ad.leads);
 
               return (
                 <tr key={ad.ad_name}>
                   <td>{ad.ad_name}</td>
                   <td>{ad.leads.toLocaleString('pt-BR')}</td>
                   <td>R$ {ad.spend.toFixed(2)}</td>
+                  <td>R$ {adCpl.toFixed(2)}</td>
                   <td>{adCtr.toFixed(2)}%</td>
                   <td>{adPageConversionRate.toFixed(2)}%</td>
                 </tr>
