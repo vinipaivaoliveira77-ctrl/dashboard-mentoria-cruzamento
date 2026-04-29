@@ -185,6 +185,34 @@ export const Dashboard: React.FC = () => {
           <MetricasMetaAds data={windsorData} loading={loadingWindsor} />
 
           <section className="metrics-section">
+            <h2>Desempenho de Criativos</h2>
+            <div className="table-responsive table-scrollable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Criativo</th>
+                    <th>Vendas</th>
+                    <th>Faturamento</th>
+                    <th>Investimento</th>
+                    <th>ROAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {metrics.criativosComRoas.map((criativo) => (
+                    <tr key={criativo.criativo}>
+                      <td>{criativo.criativo || 'Sem Criativo'}</td>
+                      <td>{criativo.vendas}</td>
+                      <td>R$ {criativo.faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                      <td>R$ {criativo.investimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                      <td>{criativo.roas.toFixed(2)}x</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="metrics-section">
             <h2>Vendas por UTM Medium</h2>
             <div className="table-responsive table-scrollable">
               <table>
@@ -229,34 +257,6 @@ export const Dashboard: React.FC = () => {
                       <td>{data.vendas}</td>
                       <td>R$ {data.faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                       <td>R$ {(data.faturamento / data.vendas).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="metrics-section">
-            <h2>Desempenho de Criativos</h2>
-            <div className="table-responsive table-scrollable">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Criativo</th>
-                    <th>Vendas</th>
-                    <th>Faturamento</th>
-                    <th>Investimento</th>
-                    <th>ROAS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {metrics.criativosComRoas.map((criativo) => (
-                    <tr key={criativo.criativo}>
-                      <td>{criativo.criativo || 'Sem Criativo'}</td>
-                      <td>{criativo.vendas}</td>
-                      <td>R$ {criativo.faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                      <td>R$ {criativo.investimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                      <td>{criativo.roas.toFixed(2)}x</td>
                     </tr>
                   ))}
                 </tbody>
