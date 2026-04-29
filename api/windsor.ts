@@ -89,8 +89,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
       });
 
-    // Cache de 1 hora (1h)
-    res.setHeader('Cache-Control', 'public, max-age=3600');
+    // Cache de 5 minutos (300s) - dados frescos mais frequentemente
+    res.setHeader('Cache-Control', 'public, max-age=300');
     res.status(200).json(records);
   } catch (error) {
     console.error('Erro ao buscar dados do Windsor:', error);

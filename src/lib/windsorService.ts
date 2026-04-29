@@ -19,9 +19,18 @@ export async function fetchWindsorData(
   endDate: string
 ): Promise<WindsorMetrics[]> {
   try {
-    const response = await fetch(
-      `/api/windsor?start_date=${startDate}&end_date=${endDate}`
-    );
+    const now = new Date();
+    const today = now.toLocaleDateString('pt-BR');
+    const refreshKey = `windsor_daily_refresh_${today}`;
+
+    // Após 10h, primeiro acesso do dia ignora cache
+    let url = `/api/windsor?start_date=${startDate}&end_date=${endDate}`;
+    if (now.getHours() >= 10 && !sessionStorage.getItem(refreshKey)) {
+      url += `&bust=${Date.now()}`;
+      sessionStorage.setItem(refreshKey, 'true');
+    }
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       console.error('Erro ao buscar Windsor:', response.statusText);
