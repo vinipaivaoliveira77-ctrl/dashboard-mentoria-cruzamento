@@ -194,6 +194,12 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.table-responsive.table-scrollable {
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
 .table-scrollable {
   max-height: 400px;
   overflow-y: auto;
