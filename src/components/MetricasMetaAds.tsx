@@ -82,56 +82,88 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
         </div>
       </div>
 
-      {/* Métricas de tráfego */}
-      <div className="metrics-grid">
-        <MetricCard
-          label="Impressoes"
-          value={totalImpressions.toLocaleString('pt-BR')}
-          icon="👁"
-          color="blue"
-        />
-        <MetricCard
-          label="Link Clicks"
-          value={totalLinkClicks.toLocaleString('pt-BR')}
-          icon="🔗"
-          color="blue"
-        />
-        <MetricCard
-          label="Landing Page Views"
-          value={totalLandingPageViews.toLocaleString('pt-BR')}
-          icon="📄"
-          color="green"
-        />
-        <MetricCard
-          label="CPM Medio"
-          value={`R$ ${cpm.toFixed(2)}`}
-          icon="💰"
-          color="blue"
-        />
-        <MetricCard
-          label="CPC Medio"
-          value={`R$ ${cpc.toFixed(2)}`}
-          icon="💵"
-          color="green"
-        />
-        <MetricCard
-          label="CTR Medio"
-          value={`${ctr.toFixed(2)}%`}
-          icon="📈"
-          color="purple"
-        />
-        <MetricCard
-          label="Connect Rate"
-          value={`${connectRate.toFixed(2)}%`}
-          icon="🔗"
-          color="orange"
-        />
-        <MetricCard
-          label="Taxa Conversao Pagina"
-          value={`${pageConversionRate.toFixed(2)}%`}
-          icon="✓"
-          color="green"
-        />
+      {/* Métricas de tráfego em formato funil */}
+      <div className="traffic-funnel">
+        {/* Coluna esquerda: métricas base do funil */}
+        <div className="traffic-funnel-col">
+          <div className="funnel-step funnel-step-0">
+            <MetricCard
+              label="Impressoes"
+              value={totalImpressions.toLocaleString('pt-BR')}
+              icon="👁"
+              color="blue"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-1">
+            <MetricCard
+              label="Link Clicks"
+              value={totalLinkClicks.toLocaleString('pt-BR')}
+              icon="🔗"
+              color="blue"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-2">
+            <MetricCard
+              label="Landing Page Views"
+              value={totalLandingPageViews.toLocaleString('pt-BR')}
+              icon="📄"
+              color="green"
+            />
+          </div>
+        </div>
+
+        {/* Conector central */}
+        <div className="traffic-funnel-connector">↔</div>
+
+        {/* Coluna direita: métricas calculadas */}
+        <div className="traffic-funnel-col">
+          <div className="funnel-step funnel-step-0">
+            <MetricCard
+              label="CPM Medio"
+              value={`R$ ${cpm.toFixed(2)}`}
+              icon="💰"
+              color="blue"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-1">
+            <MetricCard
+              label="CPC Medio"
+              value={`R$ ${cpc.toFixed(2)}`}
+              icon="💵"
+              color="green"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-2">
+            <MetricCard
+              label="CTR Medio"
+              value={`${ctr.toFixed(2)}%`}
+              icon="📈"
+              color="purple"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-3">
+            <MetricCard
+              label="Connect Rate"
+              value={`${connectRate.toFixed(2)}%`}
+              icon="🔗"
+              color="orange"
+            />
+          </div>
+          <div className="funnel-step-arrow">↓</div>
+          <div className="funnel-step funnel-step-4">
+            <MetricCard
+              label="Taxa Conversao Pagina"
+              value={`${pageConversionRate.toFixed(2)}%`}
+              icon="✓"
+              color="green"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Tabela de Campanhas */}

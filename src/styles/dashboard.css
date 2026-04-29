@@ -229,7 +229,7 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Funil de tráfego */
+/* Funil de tráfego (Gasto → Leads → CPL) */
 .funnel-container {
   display: flex;
   align-items: center;
@@ -247,6 +247,50 @@ tbody tr:last-child td {
   color: var(--primary);
   flex-shrink: 0;
   padding: 0 4px;
+}
+
+/* Funil de tráfego (métricas em cascata) */
+.traffic-funnel {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.traffic-funnel-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.traffic-funnel-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary);
+  padding-top: 70px;
+  flex-shrink: 0;
+}
+
+.funnel-step {
+  margin: 0 auto;
+}
+
+/* Gradiente de larguras — funil visual */
+.funnel-step-0 { width: 100%; }
+.funnel-step-1 { width: 85%; }
+.funnel-step-2 { width: 70%; }
+.funnel-step-3 { width: 55%; }
+.funnel-step-4 { width: 40%; }
+
+.funnel-step-arrow {
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-gray);
+  padding: 6px 0;
+  line-height: 1;
 }
 
 @media (max-width: 768px) {
@@ -277,5 +321,23 @@ tbody tr:last-child td {
 
   .funnel-arrow {
     transform: rotate(90deg);
+  }
+
+  .traffic-funnel {
+    flex-direction: column;
+  }
+
+  .traffic-funnel-connector {
+    padding-top: 0;
+    transform: rotate(90deg);
+    align-self: center;
+  }
+
+  .funnel-step-0,
+  .funnel-step-1,
+  .funnel-step-2,
+  .funnel-step-3,
+  .funnel-step-4 {
+    width: 100%;
   }
 }
