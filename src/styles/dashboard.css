@@ -197,6 +197,7 @@ body {
 .table-scrollable {
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .metricas-meta {
