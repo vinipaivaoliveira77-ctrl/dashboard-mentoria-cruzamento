@@ -52,12 +52,27 @@ CPL = Gasto / Leads
 ```
 **Unidade:** R$
 
+#### ROAS (Return on Ad Spend) ⭐ NOVO
+```
+ROAS = Faturamento Total / Gasto Total em Tráfego
+```
+**Nota:** Calcula faturamento da Mentoria (Google Sheets) dividido pelo investimento total em tráfego (Windsor Meta Ads). Só aparece no dashboard quando há dados de tráfego.
+**Unidade:** Multiplicador (x) - ex: 10x = cada real gasto retorna 10
+
 ## Filtros Aplicados
 - **Campanhas:** Apenas campanhas contendo "PPTOMentoria" no nome
 - **Campo 'actions':** Extrai `landing_page_view` e `lead` do array de ações
 - **Cache:** 1 hora (max-age=3600)
 
+## Estrutura do Dashboard
+**Ordem das seções (28/04/2026):**
+1. **Visão Geral da Operação** - Total Vendas, Faturamento, Ticket Médio, Dias Conversão, ROAS
+2. **Meta Ads** - Tráfego pago (12 cards de métricas + tabela por campanha)
+3. **Vendas por UTM Medium** - Top 10 mediums por faturamento
+4. **Vendas por UTM Content** - Top 10 criativos por faturamento
+
 ## Localização do Código
-- **Funções de cálculo:** `src/lib/windsorService.ts` (linhas 64-79)
-- **Componente de renderização:** `src/components/MetricasMetaAds.tsx`
-- **Endpoint da API:** `api/windsor.ts`
+- **Dashboard principal:** `src/components/Dashboard.tsx` (ROAS calculado no useMemo)
+- **Funções de cálculo Windsor:** `src/lib/windsorService.ts` (linhas 64-79)
+- **Seção Meta Ads:** `src/components/MetricasMetaAds.tsx`
+- **Endpoint API:** `api/windsor.ts`
