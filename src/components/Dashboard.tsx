@@ -87,6 +87,23 @@ export const Dashboard: React.FC = () => {
       return acc;
     }, {} as Record<string, { vendas: number; faturamento: number }>);
 
+    const criativosComRoas = Object.entries(porUtmContent)
+      .map(([criativo, data]) => {
+        const investimento = windsorData
+          .filter(item => item.ad_name === criativo)
+          .reduce((sum, item) => sum + item.spend, 0);
+
+        return {
+          criativo,
+          vendas: data.vendas,
+          faturamento: data.faturamento,
+          investimento,
+          roas: investimento > 0 ? data.faturamento / investimento : 0,
+        };
+      })
+      .filter(item => item.vendas > 0)
+      .sort((a, b) => b.faturamento - a.faturamento);
+
     return {
       totalVendas,
       totalFaturamento,
@@ -96,6 +113,7 @@ export const Dashboard: React.FC = () => {
       roas,
       porUtmMedium: Object.entries(porUtmMedium).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
       porUtmContent: Object.entries(porUtmContent).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
+      criativosComRoas,
     };
   }, [filteredData, windsorData]);
 
@@ -211,6 +229,34 @@ export const Dashboard: React.FC = () => {
                       <td>{data.vendas}</td>
                       <td>R$ {data.faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                       <td>R$ {(data.faturamento / data.vendas).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="metrics-section">
+            <h2>Desempenho de Criativos</h2>
+            <div className="table-responsive table-scrollable">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Criativo</th>
+                    <th>Vendas</th>
+                    <th>Faturamento</th>
+                    <th>Investimento</th>
+                    <th>ROAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {metrics.criativosComRoas.map((criativo) => (
+                    <tr key={criativo.criativo}>
+                      <td>{criativo.criativo || 'Sem Criativo'}</td>
+                      <td>{criativo.vendas}</td>
+                      <td>R$ {criativo.faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                      <td>R$ {criativo.investimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                      <td>{criativo.roas.toFixed(2)}x</td>
                     </tr>
                   ))}
                 </tbody>
