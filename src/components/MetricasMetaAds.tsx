@@ -45,6 +45,29 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   const pageConversionRate = calculatePageConversionRate(totalLeads, totalLandingPageViews);
   const cpl = calculateCPL(totalSpend, totalLeads);
 
+  // Agrupar dados por nome do anúncio
+  const groupedByAd = Object.values(
+    data.reduce((acc, item) => {
+      const key = item.ad_name;
+      if (!acc[key]) {
+        acc[key] = {
+          ad_name: key,
+          impressions: 0,
+          link_clicks: 0,
+          landing_page_views: 0,
+          leads: 0,
+          spend: 0,
+        };
+      }
+      acc[key].impressions += item.impressions;
+      acc[key].link_clicks += item.link_clicks;
+      acc[key].landing_page_views += item.landing_page_views;
+      acc[key].leads += item.leads;
+      acc[key].spend += item.spend;
+      return acc;
+    }, {} as Record<string, { ad_name: string; impressions: number; link_clicks: number; landing_page_views: number; leads: number; spend: number }>)
+  ).sort((a, b) => b.spend - a.spend);
+
   return (
     <section className="metricas-meta">
       <h2>Meta Ads - Dados do Periodo</h2>
@@ -166,14 +189,12 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
         </div>
       </div>
 
-      {/* Tabela de Campanhas */}
+      {/* Tabela de Anúncios */}
       <div className="table-responsive">
-        <h3>Desempenho por Campanha</h3>
+        <h3>Desempenho por Anuncio</h3>
         <table>
           <thead>
             <tr>
-              <th>Campanha</th>
-              <th>Conjunto de Anuncios</th>
               <th>Anuncio</th>
               <th>Impressoes</th>
               <th>Link Clicks</th>
@@ -188,34 +209,32 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             </tr>
           </thead>
           <tbody>
-            {data.map((item, idx) => {
-              const itemCpm = calculateCPM(item.spend, item.impressions);
-              const itemCpc = calculateCPC(item.spend, item.link_clicks);
-              const itemCtr = calculateCTR(item.link_clicks, item.impressions);
-              const itemConnectRate = calculateConnectRate(
-                item.landing_page_views,
-                item.link_clicks
+            {groupedByAd.map((ad) => {
+              const adCpm = calculateCPM(ad.spend, ad.impressions);
+              const adCpc = calculateCPC(ad.spend, ad.link_clicks);
+              const adCtr = calculateCTR(ad.link_clicks, ad.impressions);
+              const adConnectRate = calculateConnectRate(
+                ad.landing_page_views,
+                ad.link_clicks
               );
-              const itemPageConversionRate = calculatePageConversionRate(
-                item.leads,
-                item.landing_page_views
+              const adPageConversionRate = calculatePageConversionRate(
+                ad.leads,
+                ad.landing_page_views
               );
 
               return (
-                <tr key={idx}>
-                  <td>{item.campaign_name}</td>
-                  <td>{item.adset_name}</td>
-                  <td>{item.ad_name}</td>
-                  <td>{item.impressions.toLocaleString('pt-BR')}</td>
-                  <td>{item.link_clicks.toLocaleString('pt-BR')}</td>
-                  <td>{item.landing_page_views.toLocaleString('pt-BR')}</td>
-                  <td>{item.leads.toLocaleString('pt-BR')}</td>
-                  <td>R$ {item.spend.toFixed(2)}</td>
-                  <td>R$ {itemCpm.toFixed(2)}</td>
-                  <td>R$ {itemCpc.toFixed(2)}</td>
-                  <td>{itemCtr.toFixed(2)}%</td>
-                  <td>{itemConnectRate.toFixed(2)}%</td>
-                  <td>{itemPageConversionRate.toFixed(2)}%</td>
+                <tr key={ad.ad_name}>
+                  <td>{ad.ad_name}</td>
+                  <td>{ad.impressions.toLocaleString('pt-BR')}</td>
+                  <td>{ad.link_clicks.toLocaleString('pt-BR')}</td>
+                  <td>{ad.landing_page_views.toLocaleString('pt-BR')}</td>
+                  <td>{ad.leads.toLocaleString('pt-BR')}</td>
+                  <td>R$ {ad.spend.toFixed(2)}</td>
+                  <td>R$ {adCpm.toFixed(2)}</td>
+                  <td>R$ {adCpc.toFixed(2)}</td>
+                  <td>{adCtr.toFixed(2)}%</td>
+                  <td>{adConnectRate.toFixed(2)}%</td>
+                  <td>{adPageConversionRate.toFixed(2)}%</td>
                 </tr>
               );
             })}
