@@ -190,7 +190,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
       </div>
 
       {/* Tabela de Anúncios */}
-      <div className="table-responsive">
+      <div className="table-responsive table-scrollable">
         <h3>Desempenho por Anuncio</h3>
         <table>
           <thead>

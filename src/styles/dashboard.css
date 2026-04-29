@@ -194,6 +194,16 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.table-scrollable {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.metricas-meta table td:first-child,
+.metricas-meta table th:first-child {
+  text-align: left;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
