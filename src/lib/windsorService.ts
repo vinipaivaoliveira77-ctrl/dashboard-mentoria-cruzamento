@@ -67,13 +67,13 @@ export const calculateCPM = (spend: number, impressions: number): number => {
 };
 
 // Função para calcular CPC (Custo por Clique)
-export const calculateCPC = (spend: number, clicks: number): number => {
-  if (clicks === 0) return 0;
-  return spend / clicks;
+export const calculateCPC = (spend: number, linkClicks: number): number => {
+  if (linkClicks === 0) return 0;
+  return spend / linkClicks;
 };
 
 // Função para calcular CTR (Click-Through Rate)
-export const calculateCTR = (clicks: number, impressions: number): number => {
+export const calculateCTR = (linkClicks: number, impressions: number): number => {
   if (impressions === 0) return 0;
-  return (clicks / impressions) * 100;
+  return (linkClicks / impressions) * 100;
 };

@@ -39,8 +39,8 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   const totalSpend = data.reduce((sum, item) => sum + item.spend, 0);
 
   const cpm = calculateCPM(totalSpend, totalImpressions);
-  const cpc = calculateCPC(totalSpend, totalClicks);
-  const ctr = calculateCTR(totalClicks, totalImpressions);
+  const cpc = calculateCPC(totalSpend, totalLinkClicks);
+  const ctr = calculateCTR(totalLinkClicks, totalImpressions);
 
   const connectRate = calculateConnectRate(totalLandingPageViews, totalLinkClicks);
   const pageConversionRate = calculatePageConversionRate(totalLeads, totalLandingPageViews);
@@ -152,8 +152,8 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           <tbody>
             {data.map((item, idx) => {
               const itemCpm = calculateCPM(item.spend, item.impressions);
-              const itemCpc = calculateCPC(item.spend, item.clicks);
-              const itemCtr = calculateCTR(item.clicks, item.impressions);
+              const itemCpc = calculateCPC(item.spend, item.link_clicks);
+              const itemCtr = calculateCTR(item.link_clicks, item.impressions);
               const itemConnectRate = calculateConnectRate(
                 item.landing_page_views,
                 item.link_clicks
