@@ -20,7 +20,16 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   loading,
 }) => {
   if (loading) {
-    return <div className="loading">Carregando dados do Meta Ads...</div>;
+    return (
+      <section className="metricas-meta">
+        <h2>Meta Ads - Dados do Periodo</h2>
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Carregando dados do Meta Ads...</p>
+          <p className="loading-hint">Períodos maiores podem levar até 30 segundos</p>
+        </div>
+      </section>
+    );
   }
 
   if (data.length === 0) {
