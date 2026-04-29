@@ -9,6 +9,17 @@ import {
   calculateCTR,
 } from '../lib/windsorService';
 import { MetricCard } from './MetricCard';
+import {
+  ImpressionIcon,
+  LinkClickIcon,
+  LandingPageIcon,
+  CPMIcon,
+  CPCIcon,
+  CTRIcon,
+  ConnectRateIcon,
+  ConversionIcon,
+  CPLIcon,
+} from './icons/TrafficIcons';
 
 interface MetricasMetaAdsProps {
   data: WindsorMetrics[];
@@ -122,7 +133,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="Impressoes"
               value={totalImpressions.toLocaleString('pt-BR')}
-              icon="👁"
+              icon={<ImpressionIcon />}
               color="blue"
             />
           </div>
@@ -131,7 +142,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="Link Clicks"
               value={totalLinkClicks.toLocaleString('pt-BR')}
-              icon="🔗"
+              icon={<LinkClickIcon />}
               color="blue"
             />
           </div>
@@ -140,7 +151,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="Landing Page Views"
               value={totalLandingPageViews.toLocaleString('pt-BR')}
-              icon="📄"
+              icon={<LandingPageIcon />}
               color="green"
             />
           </div>
@@ -155,7 +166,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="CPM Medio"
               value={`R$ ${cpm.toFixed(2)}`}
-              icon="💰"
+              icon={<CPMIcon />}
               color="blue"
             />
           </div>
@@ -164,7 +175,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="CPC Medio"
               value={`R$ ${cpc.toFixed(2)}`}
-              icon="💵"
+              icon={<CPCIcon />}
               color="green"
             />
           </div>
@@ -173,7 +184,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="CTR Medio"
               value={`${ctr.toFixed(2)}%`}
-              icon="📈"
+              icon={<CTRIcon />}
               color="purple"
             />
           </div>
@@ -182,7 +193,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="Connect Rate"
               value={`${connectRate.toFixed(2)}%`}
-              icon="🔗"
+              icon={<ConnectRateIcon />}
               color="orange"
             />
           </div>
@@ -191,7 +202,7 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
             <MetricCard
               label="Taxa Conversao Pagina"
               value={`${pageConversionRate.toFixed(2)}%`}
-              icon="✓"
+              icon={<ConversionIcon />}
               color="green"
             />
           </div>
