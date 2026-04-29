@@ -93,7 +93,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
       };
     });
 
-    res.setHeader('Cache-Control', 'public, max-age=60');
+    res.setHeader('Cache-Control', 'public, max-age=300');
     res.status(200).json(data);
   } catch (error) {
     console.error('Erro ao buscar dados do Google Sheets:', error);

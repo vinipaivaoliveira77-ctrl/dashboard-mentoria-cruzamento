@@ -15,7 +15,18 @@ export interface CruzamentoData {
 
 export async function fetchSheetData(): Promise<CruzamentoData[]> {
   try {
-    const response = await fetch('/api/sheets', {
+    const now = new Date();
+    const today = now.toLocaleDateString('pt-BR');
+    const refreshKey = `sheets_daily_refresh_${today}`;
+
+    // Após 10h, primeiro acesso do dia ignora cache
+    let url = '/api/sheets';
+    if (now.getHours() >= 10 && !sessionStorage.getItem(refreshKey)) {
+      url += `?bust=${Date.now()}`;
+      sessionStorage.setItem(refreshKey, 'true');
+    }
+
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
