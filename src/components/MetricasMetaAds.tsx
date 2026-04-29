@@ -4,6 +4,9 @@ import {
   calculateConnectRate,
   calculatePageConversionRate,
   calculateCPL,
+  calculateCPM,
+  calculateCPC,
+  calculateCTR,
 } from '../lib/windsorService';
 import { MetricCard } from './MetricCard';
 
@@ -35,9 +38,9 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   const totalLeads = data.reduce((sum, item) => sum + item.leads, 0);
   const totalSpend = data.reduce((sum, item) => sum + item.spend, 0);
 
-  const avgCpm = data.length > 0 ? data.reduce((sum, item) => sum + item.cpm, 0) / data.length : 0;
-  const avgCpc = data.length > 0 ? data.reduce((sum, item) => sum + item.cpc, 0) / data.length : 0;
-  const avgCtr = data.length > 0 ? data.reduce((sum, item) => sum + item.ctr, 0) / data.length : 0;
+  const cpm = calculateCPM(totalSpend, totalImpressions);
+  const cpc = calculateCPC(totalSpend, totalClicks);
+  const ctr = calculateCTR(totalClicks, totalImpressions);
 
   const connectRate = calculateConnectRate(totalLandingPageViews, totalLinkClicks);
   const pageConversionRate = calculatePageConversionRate(totalLeads, totalLandingPageViews);
@@ -89,19 +92,19 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
         />
         <MetricCard
           label="CPM Medio"
-          value={`R$ ${avgCpm.toFixed(2)}`}
+          value={`R$ ${cpm.toFixed(2)}`}
           icon="💰"
           color="blue"
         />
         <MetricCard
           label="CPC Medio"
-          value={`R$ ${avgCpc.toFixed(2)}`}
+          value={`R$ ${cpc.toFixed(2)}`}
           icon="💵"
           color="green"
         />
         <MetricCard
           label="CTR Medio"
-          value={`${avgCtr.toFixed(2)}%`}
+          value={`${ctr.toFixed(2)}%`}
           icon="📈"
           color="purple"
         />
@@ -148,6 +151,9 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           </thead>
           <tbody>
             {data.map((item, idx) => {
+              const itemCpm = calculateCPM(item.spend, item.impressions);
+              const itemCpc = calculateCPC(item.spend, item.clicks);
+              const itemCtr = calculateCTR(item.clicks, item.impressions);
               const itemConnectRate = calculateConnectRate(
                 item.landing_page_views,
                 item.link_clicks
@@ -167,9 +173,9 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
                   <td>{item.landing_page_views.toLocaleString('pt-BR')}</td>
                   <td>{item.leads.toLocaleString('pt-BR')}</td>
                   <td>R$ {item.spend.toFixed(2)}</td>
-                  <td>R$ {item.cpm.toFixed(2)}</td>
-                  <td>R$ {item.cpc.toFixed(2)}</td>
-                  <td>{item.ctr.toFixed(2)}%</td>
+                  <td>R$ {itemCpm.toFixed(2)}</td>
+                  <td>R$ {itemCpc.toFixed(2)}</td>
+                  <td>{itemCtr.toFixed(2)}%</td>
                   <td>{itemConnectRate.toFixed(2)}%</td>
                   <td>{itemPageConversionRate.toFixed(2)}%</td>
                 </tr>

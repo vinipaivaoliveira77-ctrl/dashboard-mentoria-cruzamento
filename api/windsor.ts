@@ -12,9 +12,6 @@ export interface WindsorData {
   landing_page_views: number;
   leads: number;
   spend: number;
-  cpm: number;
-  cpc: number;
-  ctr: number;
   campaign_name: string;
   adset_name: string;
   ad_name: string;
@@ -39,9 +36,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       'clicks',
       'link_clicks',
       'spend',
-      'cpm',
-      'cpc',
-      'ctr',
       'campaign_name',
       'adset_name',
       'ad_name',
@@ -89,9 +83,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           landing_page_views,
           leads,
           spend: parseFloat(row.spend) || 0,
-          cpm: parseFloat(row.cpm) || 0,
-          cpc: parseFloat(row.cpc) || 0,
-          ctr: parseFloat(row.ctr) || 0,
           campaign_name: row.campaign_name?.trim() || '',
           adset_name: row.adset_name?.trim() || '',
           ad_name: row.ad_name?.trim() || '',

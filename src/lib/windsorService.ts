@@ -59,3 +59,21 @@ export const calculateCPL = (spend: number, leads: number): number => {
   if (leads === 0) return 0;
   return spend / leads;
 };
+
+// Função para calcular CPM (Custo por Mil Impressões)
+export const calculateCPM = (spend: number, impressions: number): number => {
+  if (impressions === 0) return 0;
+  return (spend / impressions) * 1000;
+};
+
+// Função para calcular CPC (Custo por Clique)
+export const calculateCPC = (spend: number, clicks: number): number => {
+  if (clicks === 0) return 0;
+  return spend / clicks;
+};
+
+// Função para calcular CTR (Click-Through Rate)
+export const calculateCTR = (clicks: number, impressions: number): number => {
+  if (impressions === 0) return 0;
+  return (clicks / impressions) * 100;
+};
