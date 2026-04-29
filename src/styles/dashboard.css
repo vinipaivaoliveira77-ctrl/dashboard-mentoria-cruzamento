@@ -199,6 +199,10 @@ body {
   overflow-y: auto;
 }
 
+.metricas-meta {
+  margin-bottom: 60px;
+}
+
 .metricas-meta table td:first-child,
 .metricas-meta table th:first-child {
   text-align: left;

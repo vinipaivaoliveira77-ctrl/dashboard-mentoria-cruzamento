@@ -196,27 +196,15 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           <thead>
             <tr>
               <th>Anuncio</th>
-              <th>Impressoes</th>
-              <th>Link Clicks</th>
-              <th>Landing Page Views</th>
               <th>Leads</th>
               <th>Gasto</th>
-              <th>CPM</th>
-              <th>CPC</th>
               <th>CTR</th>
-              <th>Connect Rate</th>
               <th>Taxa Conversao</th>
             </tr>
           </thead>
           <tbody>
             {groupedByAd.map((ad) => {
-              const adCpm = calculateCPM(ad.spend, ad.impressions);
-              const adCpc = calculateCPC(ad.spend, ad.link_clicks);
               const adCtr = calculateCTR(ad.link_clicks, ad.impressions);
-              const adConnectRate = calculateConnectRate(
-                ad.landing_page_views,
-                ad.link_clicks
-              );
               const adPageConversionRate = calculatePageConversionRate(
                 ad.leads,
                 ad.landing_page_views
@@ -225,15 +213,9 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
               return (
                 <tr key={ad.ad_name}>
                   <td>{ad.ad_name}</td>
-                  <td>{ad.impressions.toLocaleString('pt-BR')}</td>
-                  <td>{ad.link_clicks.toLocaleString('pt-BR')}</td>
-                  <td>{ad.landing_page_views.toLocaleString('pt-BR')}</td>
                   <td>{ad.leads.toLocaleString('pt-BR')}</td>
                   <td>R$ {ad.spend.toFixed(2)}</td>
-                  <td>R$ {adCpm.toFixed(2)}</td>
-                  <td>R$ {adCpc.toFixed(2)}</td>
                   <td>{adCtr.toFixed(2)}%</td>
-                  <td>{adConnectRate.toFixed(2)}%</td>
                   <td>{adPageConversionRate.toFixed(2)}%</td>
                 </tr>
               );
