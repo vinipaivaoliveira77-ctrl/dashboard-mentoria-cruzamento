@@ -6,22 +6,12 @@ import { parseDate } from '../lib/dateUtils';
 import { MetricasMetaAds } from './MetricasMetaAds';
 import { fetchWindsorData, type WindsorMetrics } from '../lib/windsorService';
 import { fetchHotmartData, type HotmartMetrics } from '../lib/hotmartService';
-import { fetchHotmartData, type HotmartMetrics } from '../lib/hotmartService';
 
 export const Dashboard: React.FC = () => {
   const [data, setData] = useState<CruzamentoData[]>([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-
-  // Estado do Windsor
-  const [hotmartMetrics, setHotmartMetrics] = useState<HotmartMetrics>({
-    totalVendas: 0,
-    totalFaturamento: 0,
-    ticketMedio: 0,
-  });
-
-  // Estado do Windsor
   const [hotmartMetrics, setHotmartMetrics] = useState<HotmartMetrics>({
     totalVendas: 0,
     totalFaturamento: 0,
