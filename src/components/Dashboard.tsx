@@ -78,11 +78,11 @@ export const Dashboard: React.FC = () => {
     const totalSpend = windsorData.reduce((sum, item) => sum + item.spend, 0);
     const roas = totalSpend > 0 ? totalFaturamento / totalSpend : 0;
 
-    // Totais combinados (Cruzamento + Hotmart)
-    const totalVendasCombinado = totalVendas + hotmartMetrics.totalVendas;
-    const totalFaturamentoCombinado = totalFaturamento + hotmartMetrics.totalFaturamento;
-    const ticketMedioCombinado = totalVendasCombinado > 0 ? totalFaturamentoCombinado / totalVendasCombinado : 0;
-    const roasCombinado = totalSpend > 0 ? totalFaturamentoCombinado / totalSpend : 0;
+    // Hotmart é o total (já inclui o cruzamento como subconjunto)
+    const totalVendasCombinado = hotmartMetrics.totalVendas;
+    const totalFaturamentoCombinado = hotmartMetrics.totalFaturamento;
+    const ticketMedioCombinado = hotmartMetrics.ticketMedio;
+    const roasCombinado = totalSpend > 0 ? hotmartMetrics.totalFaturamento / totalSpend : 0;
 
     const porUtmMedium = filteredData.reduce((acc, item) => {
       if (!acc[item.utmMedium]) {
@@ -207,21 +207,21 @@ export const Dashboard: React.FC = () => {
             <div className="metrics-grid">
               <MetricCard
                 label="Total de Vendas"
-                sublabel="Total (Cruzamento + Hotmart)"
+                sublabel="Total Hotmart"
                 value={metrics.totalVendasCombinado}
                 icon="🛍️"
                 color="blue"
               />
               <MetricCard
                 label="Faturamento Total"
-                sublabel="Total (Cruzamento + Hotmart)"
+                sublabel="Total Hotmart"
                 value={`R$ ${metrics.totalFaturamentoCombinado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                 icon="💰"
                 color="green"
               />
               <MetricCard
                 label="Ticket Médio"
-                sublabel="Total (Cruzamento + Hotmart)"
+                sublabel="Total Hotmart"
                 value={`R$ ${metrics.ticketMedioCombinado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                 icon="📈"
                 color="orange"
@@ -229,7 +229,7 @@ export const Dashboard: React.FC = () => {
               {windsorData.length > 0 && (
                 <MetricCard
                   label="ROAS"
-                  sublabel="Total (Cruzamento + Hotmart)"
+                  sublabel="Total Hotmart"
                   value={`${metrics.roasCombinado.toFixed(2)}x`}
                   icon="📊"
                   color="purple"

@@ -116,14 +116,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       totalVendas,
       totalFaturamento,
       ticketMedio,
-      _debug: {
-        start_date: start_date,
-        end_date: end_date,
-        startDateObj: startDateObj?.toISOString(),
-        endDateObj: endDateObj?.toISOString(),
-        totalRows: rows.length - 1,
-        mentoriaRows: vendas.filter(v => v.nomeProduto.includes('Mentoria Start 90')).length,
-      }
     });
   } catch (error) {
     console.error('Erro ao buscar dados do Hotmart:', error);
