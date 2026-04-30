@@ -10,8 +10,29 @@ export interface HotmartMetrics {
   ticketMedio: number;
 }
 
-export default async function handler(_req: VercelRequest, res: VercelResponse) {
+function parseDate(dateString: string): Date {
+  if (!dateString || dateString.trim() === '') {
+    return new Date(0);
+  }
+
+  const parts = dateString.trim().split(' ');
+  const dateParts = parts[0].split('/');
+
+  if (dateParts.length < 3) {
+    return new Date(0);
+  }
+
+  const day = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1;
+  const year = parseInt(dateParts[2], 10);
+
+  return new Date(year, month, day);
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    const { start_date, end_date } = req.query;
+    
     if (
       !process.env.GOOGLE_PROJECT_ID ||
       !process.env.GOOGLE_PRIVATE_KEY ||
@@ -56,6 +77,7 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
     const vendas = rows.slice(1).map((row) => {
       const nomeProduto = row[1]?.trim() || '';
+      const dataCompraStr = row[6]?.trim() || '';
       const precoStr = row[4]?.toString().trim() || '0';
 
       const precoLimpo = precoStr
@@ -67,11 +89,23 @@ export default async function handler(_req: VercelRequest, res: VercelResponse) 
 
       return {
         nomeProduto,
+        dataCompra: dataCompraStr,
         preco,
       };
     });
 
-    const vendasMentoria = vendas.filter(v => v.nomeProduto.includes('Mentoria Start 90'));
+    const startDateObj = start_date ? new Date(start_date as string + 'T00:00:00') : null;
+    const endDateObj = end_date ? new Date(end_date as string + 'T23:59:59') : null;
+
+    const vendasMentoria = vendas.filter(v => {
+      const temMentoria = v.nomeProduto.includes('Mentoria Start 90');
+      if (!temMentoria) return false;
+
+      if (!startDateObj || !endDateObj) return true;
+
+      const dataVenda = parseDate(v.dataCompra);
+      return dataVenda >= startDateObj && dataVenda <= endDateObj;
+    });
 
     totalVendas = vendasMentoria.length;
     totalFaturamento = vendasMentoria.reduce((sum, v) => sum + v.preco, 0);

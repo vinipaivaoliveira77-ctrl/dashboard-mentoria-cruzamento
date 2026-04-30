@@ -26,17 +26,20 @@ export const Dashboard: React.FC = () => {
     loadData();
   }, []);
 
-  // Carregar dados Windsor quando datas mudam
+  // Carregar dados Windsor e Hotmart quando datas mudam
   useEffect(() => {
     if (!startDate || !endDate) {
       setWindsorData([]);
+      setHotmartMetrics({ totalVendas: 0, totalFaturamento: 0, ticketMedio: 0 });
       return;
     }
 
     const loadWindsor = async () => {
       setLoadingWindsor(true);
-      const data = await fetchWindsorData(startDate, endDate);
-      setWindsorData(data);
+      const windsorData = await fetchWindsorData(startDate, endDate);
+      const hotmartData = await fetchHotmartData(startDate, endDate);
+      setWindsorData(windsorData);
+      setHotmartMetrics(hotmartData);
       setLoadingWindsor(false);
     };
 
@@ -46,9 +49,7 @@ export const Dashboard: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     const sheetData = await fetchSheetData();
-    const hotmartData = await fetchHotmartData();
     setData(sheetData);
-    setHotmartMetrics(hotmartData);
     setLoading(false);
   };
 

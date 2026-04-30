@@ -4,15 +4,24 @@ export interface HotmartMetrics {
   ticketMedio: number;
 }
 
-export async function fetchHotmartData(): Promise<HotmartMetrics> {
+export async function fetchHotmartData(startDate?: string, endDate?: string): Promise<HotmartMetrics> {
   try {
+    let url = '/api/hotmart';
+    const params = new URLSearchParams();
+
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+
     const now = new Date();
     const today = now.toLocaleDateString('pt-BR');
     const refreshKey = `hotmart_daily_refresh_${today}`;
 
-    let url = '/api/hotmart';
     if (now.getHours() >= 10 && !sessionStorage.getItem(refreshKey)) {
-      url += `?bust=${Date.now()}`;
+      url += (params.toString() ? '&' : '?') + `bust=${Date.now()}`;
       sessionStorage.setItem(refreshKey, 'true');
     }
 
