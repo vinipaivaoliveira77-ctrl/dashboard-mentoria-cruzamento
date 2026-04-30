@@ -5,12 +5,28 @@ import { MetricCard } from './MetricCard';
 import { parseDate } from '../lib/dateUtils';
 import { MetricasMetaAds } from './MetricasMetaAds';
 import { fetchWindsorData, type WindsorMetrics } from '../lib/windsorService';
+import { fetchHotmartData, type HotmartMetrics } from '../lib/hotmartService';
+import { fetchHotmartData, type HotmartMetrics } from '../lib/hotmartService';
 
 export const Dashboard: React.FC = () => {
   const [data, setData] = useState<CruzamentoData[]>([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
+  // Estado do Windsor
+  const [hotmartMetrics, setHotmartMetrics] = useState<HotmartMetrics>({
+    totalVendas: 0,
+    totalFaturamento: 0,
+    ticketMedio: 0,
+  });
+
+  // Estado do Windsor
+  const [hotmartMetrics, setHotmartMetrics] = useState<HotmartMetrics>({
+    totalVendas: 0,
+    totalFaturamento: 0,
+    ticketMedio: 0,
+  });
 
   // Estado do Windsor
   const [windsorData, setWindsorData] = useState<WindsorMetrics[]>([]);
@@ -40,7 +56,9 @@ export const Dashboard: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     const sheetData = await fetchSheetData();
+    const hotmartData = await fetchHotmartData();
     setData(sheetData);
+    setHotmartMetrics(hotmartData);
     setLoading(false);
   };
 
@@ -68,6 +86,12 @@ export const Dashboard: React.FC = () => {
 
     const totalSpend = windsorData.reduce((sum, item) => sum + item.spend, 0);
     const roas = totalSpend > 0 ? totalFaturamento / totalSpend : 0;
+
+    // Totais combinados (Cruzamento + Hotmart)
+    const totalVendasCombinado = totalVendas + hotmartMetrics.totalVendas;
+    const totalFaturamentoCombinado = totalFaturamento + hotmartMetrics.totalFaturamento;
+    const ticketMedioCombinado = totalVendasCombinado > 0 ? totalFaturamentoCombinado / totalVendasCombinado : 0;
+    const roasCombinado = totalSpend > 0 ? totalFaturamentoCombinado / totalSpend : 0;
 
     const porUtmMedium = filteredData.reduce((acc, item) => {
       if (!acc[item.utmMedium]) {
@@ -111,11 +135,15 @@ export const Dashboard: React.FC = () => {
       diasMediosConversao,
       totalSpend,
       roas,
+      totalVendasCombinado,
+      totalFaturamentoCombinado,
+      ticketMedioCombinado,
+      roasCombinado,
       porUtmMedium: Object.entries(porUtmMedium).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
       porUtmContent: Object.entries(porUtmContent).sort((a, b) => b[1].faturamento - a[1].faturamento).slice(0, 10),
       criativosComRoas,
     };
-  }, [filteredData, windsorData]);
+  }, [filteredData, windsorData, hotmartMetrics]);
 
   return (
     <main className="dashboard">
@@ -155,18 +183,21 @@ export const Dashboard: React.FC = () => {
             <div className="metrics-grid">
               <MetricCard
                 label="Total de Vendas"
+                sublabel="Vendas com Cruzamento Automático"
                 value={metrics.totalVendas}
                 icon="🛍️"
                 color="blue"
               />
               <MetricCard
                 label="Faturamento Total"
+                sublabel="Vendas com Cruzamento Automático"
                 value={`R$ ${metrics.totalFaturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                 icon="💰"
                 color="green"
               />
               <MetricCard
                 label="Ticket Médio"
+                sublabel="Vendas com Cruzamento Automático"
                 value={`R$ ${metrics.ticketMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                 icon="📈"
                 color="orange"
@@ -174,7 +205,41 @@ export const Dashboard: React.FC = () => {
               {windsorData.length > 0 && (
                 <MetricCard
                   label="ROAS"
+                  sublabel="Vendas com Cruzamento Automático"
                   value={`${metrics.roas.toFixed(2)}x`}
+                  icon="📊"
+                  color="purple"
+                />
+              )}
+            </div>
+
+            <div className="metrics-grid">
+              <MetricCard
+                label="Total de Vendas"
+                sublabel="Total (Cruzamento + Hotmart)"
+                value={metrics.totalVendasCombinado}
+                icon="🛍️"
+                color="blue"
+              />
+              <MetricCard
+                label="Faturamento Total"
+                sublabel="Total (Cruzamento + Hotmart)"
+                value={`R$ ${metrics.totalFaturamentoCombinado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                icon="💰"
+                color="green"
+              />
+              <MetricCard
+                label="Ticket Médio"
+                sublabel="Total (Cruzamento + Hotmart)"
+                value={`R$ ${metrics.ticketMedioCombinado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                icon="📈"
+                color="orange"
+              />
+              {windsorData.length > 0 && (
+                <MetricCard
+                  label="ROAS"
+                  sublabel="Total (Cruzamento + Hotmart)"
+                  value={`${metrics.roasCombinado.toFixed(2)}x`}
                   icon="📊"
                   color="purple"
                 />
