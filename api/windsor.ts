@@ -77,7 +77,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             if (action.action_type === 'lead') {
               leads = parseFloat(action.value) || 0;
             }
-            if (action.action_type === 'follow') {
+            // Capturar seguidores - Meta usa diferentes tipos de action
+            if (action.action_type === 'follow' ||
+                action.action_type === 'page_fan' ||
+                action.action_type === 'instagram_profile_follow') {
               followers = parseFloat(action.value) || 0;
             }
           });
