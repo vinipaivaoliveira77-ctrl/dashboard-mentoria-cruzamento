@@ -25,6 +25,16 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     loadData();
+    // Definir datas padrão: 01 de maio até hoje
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const mayFirst = new Date(currentYear, 4, 1); // Mês 4 = maio (0-indexed)
+
+    const startDateStr = mayFirst.toISOString().split('T')[0];
+    const endDateStr = today.toISOString().split('T')[0];
+
+    setStartDate(startDateStr);
+    setEndDate(endDateStr);
   }, []);
 
   // Carregar dados Windsor, Instagram e Hotmart quando datas mudam

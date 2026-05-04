@@ -32,6 +32,11 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   instagramData = [],
   loading,
 }) => {
+  // Debug: log dos dados recebidos
+  if (instagramData.length > 0) {
+    console.log('✅ Dados Instagram recebidos:', instagramData);
+  }
+
   if (loading) {
     return (
       <section className="metricas-meta">
