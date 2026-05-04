@@ -15,12 +15,15 @@ export interface WindsorData {
   campaign_name: string;
   adset_name: string;
   ad_name: string;
+  ad_id: string;
+  followers: number;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    // Extrair datas da query
-    const { start_date, end_date } = req.query;
+    // Extrair datas e filtro da query
+    const { start_date, end_date, filter } = req.query;
+    const campaignFilter = (filter as string) || 'PPTOMentoria';
 
     if (!start_date || !end_date) {
       return res.status(400).json({
@@ -39,6 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       'campaign_name',
       'adset_name',
       'ad_name',
+      'ad_id',
       'actions',
     ].join(',');
 
@@ -55,14 +59,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Processar dados - Filtrar apenas campanhas com "PPTOMentoria"
+    // Processar dados - Filtrar por campanha dinâmica
     const records: WindsorData[] = (data.data || [])
       .filter((row: any) => row.date) // Descartar linhas sem data
-      .filter((row: any) => row.campaign_name?.includes('PPTOMentoria')) // Filtrar por campaign_name
+      .filter((row: any) => row.campaign_name?.includes(campaignFilter)) // Filtrar por campaign_name
       .map((row: any) => {
         // Extrair métricas do array actions
         let landing_page_views = 0;
         let leads = 0;
+        let followers = 0;
 
         if (Array.isArray(row.actions)) {
           row.actions.forEach((action: any) => {
@@ -71,6 +76,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
             if (action.action_type === 'lead') {
               leads = parseFloat(action.value) || 0;
+            }
+            if (action.action_type === 'follow') {
+              followers = parseFloat(action.value) || 0;
             }
           });
         }
@@ -86,6 +94,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           campaign_name: row.campaign_name?.trim() || '',
           adset_name: row.adset_name?.trim() || '',
           ad_name: row.ad_name?.trim() || '',
+          ad_id: row.ad_id?.trim() || '',
+          followers,
         };
       });
 

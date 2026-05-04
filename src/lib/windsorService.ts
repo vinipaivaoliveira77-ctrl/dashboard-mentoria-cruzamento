@@ -12,11 +12,14 @@ export interface WindsorMetrics {
   campaign_name: string;
   adset_name: string;
   ad_name: string;
+  ad_id: string;
+  followers: number;
 }
 
 export async function fetchWindsorData(
   startDate: string,
-  endDate: string
+  endDate: string,
+  filter?: string
 ): Promise<WindsorMetrics[]> {
   try {
     const now = new Date();
@@ -25,6 +28,10 @@ export async function fetchWindsorData(
 
     // Após 10h, primeiro acesso do dia ignora cache
     let url = `/api/windsor?start_date=${startDate}&end_date=${endDate}`;
+    if (filter) {
+      url += `&filter=${encodeURIComponent(filter)}`;
+    }
+
     if (now.getHours() >= 10 && !sessionStorage.getItem(refreshKey)) {
       url += `&bust=${Date.now()}`;
       sessionStorage.setItem(refreshKey, 'true');
@@ -85,4 +92,10 @@ export const calculateCPC = (spend: number, linkClicks: number): number => {
 export const calculateCTR = (linkClicks: number, impressions: number): number => {
   if (impressions === 0) return 0;
   return (linkClicks / impressions) * 100;
+};
+
+// Função para calcular CPS (Custo por Seguidor)
+export const calculateCPS = (spend: number, followers: number): number => {
+  if (followers === 0) return 0;
+  return spend / followers;
 };

@@ -20,25 +20,29 @@ export const Dashboard: React.FC = () => {
 
   // Estado do Windsor
   const [windsorData, setWindsorData] = useState<WindsorMetrics[]>([]);
+  const [instagramData, setInstagramData] = useState<WindsorMetrics[]>([]);
   const [loadingWindsor, setLoadingWindsor] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
 
-  // Carregar dados Windsor e Hotmart quando datas mudam
+  // Carregar dados Windsor, Instagram e Hotmart quando datas mudam
   useEffect(() => {
     if (!startDate || !endDate) {
       setWindsorData([]);
+      setInstagramData([]);
       setHotmartMetrics({ totalVendas: 0, totalFaturamento: 0, ticketMedio: 0 });
       return;
     }
 
     const loadWindsor = async () => {
       setLoadingWindsor(true);
-      const windsorData = await fetchWindsorData(startDate, endDate);
+      const mentoriaData = await fetchWindsorData(startDate, endDate, 'PPTOMentoria');
+      const instData = await fetchWindsorData(startDate, endDate, 'Instagram');
       const hotmartData = await fetchHotmartData(startDate, endDate);
-      setWindsorData(windsorData);
+      setWindsorData(mentoriaData);
+      setInstagramData(instData);
       setHotmartMetrics(hotmartData);
       setLoadingWindsor(false);
     };
@@ -238,7 +242,7 @@ export const Dashboard: React.FC = () => {
             </div>
           </section>
 
-          <MetricasMetaAds data={windsorData} loading={loadingWindsor} />
+          <MetricasMetaAds data={windsorData} instagramData={instagramData} loading={loadingWindsor} />
 
           <section className="metrics-section">
             <h2>Desempenho de Criativos</h2>

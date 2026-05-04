@@ -7,6 +7,7 @@ import {
   calculateCPM,
   calculateCPC,
   calculateCTR,
+  calculateCPS,
 } from '../lib/windsorService';
 import { MetricCard } from './MetricCard';
 import {
@@ -22,11 +23,13 @@ import {
 
 interface MetricasMetaAdsProps {
   data: WindsorMetrics[];
+  instagramData?: WindsorMetrics[];
   loading: boolean;
 }
 
 export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   data,
+  instagramData = [],
   loading,
 }) => {
   if (loading) {
@@ -88,8 +91,9 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
   ).sort((a, b) => b.spend - a.spend);
 
   return (
-    <section className="metricas-meta">
-      <h2>Meta Ads - Dados do Periodo</h2>
+    <>
+      <section className="metricas-meta">
+        <h2>Meta Ads - Dados do Periodo</h2>
 
       {/* Funil: Gasto → Leads → CPL */}
       <div className="funnel-container">
@@ -245,6 +249,106 @@ export const MetricasMetaAds: React.FC<MetricasMetaAdsProps> = ({
           </tbody>
         </table>
       </div>
-    </section>
+      </section>
+
+      {/* Seção Instagram - Seguidores */}
+      {instagramData.length > 0 && (
+        <section className="metricas-instagram">
+          <h2>Instagram - Seguidores</h2>
+
+          {/* Cards: Seguidores, Investimento, CPS */}
+          <div className="funnel-container">
+            <div className="funnel-item">
+              <MetricCard
+                label="Seguidores Ganhos"
+                value={instagramData.reduce((sum, item) => sum + item.followers, 0).toLocaleString('pt-BR')}
+                icon="👥"
+                color="blue"
+              />
+            </div>
+            <div className="funnel-arrow">→</div>
+            <div className="funnel-item">
+              <MetricCard
+                label="Investimento"
+                value={`R$ ${instagramData.reduce((sum, item) => sum + item.spend, 0).toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}`}
+                icon="💳"
+                color="orange"
+              />
+            </div>
+            <div className="funnel-arrow">→</div>
+            <div className="funnel-item">
+              <MetricCard
+                label="CPS Médio"
+                value={`R$ ${calculateCPS(
+                  instagramData.reduce((sum, item) => sum + item.spend, 0),
+                  instagramData.reduce((sum, item) => sum + item.followers, 0)
+                ).toFixed(2)}`}
+                icon="💰"
+                color="green"
+              />
+            </div>
+          </div>
+
+          {/* Tabela de Criativos Instagram */}
+          <div className="table-responsive table-scrollable">
+            <h3>Criativos Instagram (ordenado por CPS)</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Anúncio</th>
+                  <th>Seguidores</th>
+                  <th>Investimento</th>
+                  <th>CPS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.values(
+                  instagramData.reduce((acc, item) => {
+                    const key = item.ad_name;
+                    if (!acc[key]) {
+                      acc[key] = {
+                        ad_name: key,
+                        ad_id: item.ad_id,
+                        followers: 0,
+                        spend: 0,
+                      };
+                    }
+                    acc[key].followers += item.followers;
+                    acc[key].spend += item.spend;
+                    return acc;
+                  }, {} as Record<string, { ad_name: string; ad_id: string; followers: number; spend: number }>)
+                )
+                  .filter(ad => ad.followers > 0)
+                  .sort((a, b) => {
+                    const cpsa = calculateCPS(a.spend, a.followers);
+                    const cpsb = calculateCPS(b.spend, b.followers);
+                    return cpsa - cpsb;
+                  })
+                  .map((ad) => {
+                    const cps = calculateCPS(ad.spend, ad.followers);
+                    const adsManagerUrl = `https://www.facebook.com/adsmanager/manage/ads?selected_ad_ids=${ad.ad_id}`;
+
+                    return (
+                      <tr key={ad.ad_name}>
+                        <td>
+                          <a href={adsManagerUrl} target="_blank" rel="noopener noreferrer" title="Abrir no Ads Manager">
+                            {ad.ad_name}
+                          </a>
+                        </td>
+                        <td>{ad.followers.toLocaleString('pt-BR')}</td>
+                        <td>R$ {ad.spend.toFixed(2)}</td>
+                        <td>R$ {cps.toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+    </>
   );
 };
